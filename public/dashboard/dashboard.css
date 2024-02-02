@@ -5,17 +5,16 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 :root {
-  --clr-primary: #ffdd82;
-  --clr-secondary: #b0c4b1;
-  --clr-accent: #cda64e;
-  --clr-highlight: #94721a;
-  --text-color: #454839;
-  --subtext-color: #eaae65;
+  --clr-primary: #384b42;
+
+  --text-color: #4c4637;
+  --subtext-color: #384b42;
+  --subtext-light: #4d675b;
 }
 h1 {
   font-size: 4rem;
-  text-shadow: 2px 1px 1px #e5e5e3;
-  color: var(--text-color);
+  text-shadow: 2px 1px 1px #4d675b;
+  color: var(--clr-primary);
 }
 header {
   display: grid;
@@ -25,11 +24,18 @@ header {
 .container {
   background-image: linear-gradient(
     to right top,
-    #607429,
-    #7a812f,
-    #948e38,
-    #b09a42,
-    #cda64e
+    #4d6a70,
+    #5b7679,
+    #6a8383,
+    #798f8c,
+    #899c97,
+    #98a7a1,
+    #a6b3ab,
+    #b5beb6,
+    #c6cbc3,
+    #d6d9d2,
+    #e6e7e0,
+    #f6f5f0
   );
 }
 .genre_nav {
@@ -41,8 +47,8 @@ header {
 }
 .genre__item {
   font-size: 1.3rem;
-  color: #f0f0e8;
-  text-shadow: 2px 2px 1px var(--text-color);
+  color: var(--subtext-light);
+  font-weight: 900;
   padding: 0.2em 1em;
   cursor: pointer;
 }
@@ -69,10 +75,11 @@ header {
   color: var(--text-color);
 }
 .author__name {
-  color: var(--subtext-color);
+  color: var(--clr-primary);
   font-size: 1.1rem;
 }
 .desc__text {
-  color: var(--text-color);
+  color: var(--subtext-light);
   line-height: 1.6;
+  margin-top: 0.2em;
 }
