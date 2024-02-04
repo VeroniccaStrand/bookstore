@@ -4,9 +4,27 @@ import Author from '../models/authorModel.js';
 
 export const getAllProducts = async (req, res) => {
   try {
-    const product = await Book.find().populate('author');
+    const products = await Product.find();
+    if (!products) {
+      res.status(404).json({ message: 'no products in store' });
+    }
+    const productsWithDetails = await Promise.all(
+      products.map(async (product) => {
+        const author = await Author.findById(product.author);
+        const book = await Book.findById(product.book);
 
-    return res.status(200).json(product);
+        return {
+          productId: product.id,
+          name: author.name,
+          title: book.title,
+          desc: book.desc,
+          quantity: product.quantity,
+          price: product.price,
+        };
+      })
+    );
+
+    return res.status(200).json(productsWithDetails);
   } catch (error) {
     console.error('Error getting books:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
@@ -56,5 +74,43 @@ export const createProduct = async (req, res) => {
   } catch (error) {
     console.error('Error creating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// get products from author
+
+export const getProdFromAuthor = async (req, res) => {
+  try {
+    const authorId = req.params.id;
+
+    const author = await Author.findById(authorId);
+
+    if (!author) {
+      return res
+        .status(404)
+        .json({ message: 'No books from this author found' });
+    }
+
+    const products = await Product.find({ author: authorId });
+
+    const productsWithDetails = await Promise.all(
+      products.map(async (product) => {
+        const author = await Author.findById(product.author);
+        const book = await Book.findById(product.book);
+
+        return {
+          name: author.name,
+          title: book.title,
+          desc: book.desc,
+          quantity: product.quantity,
+          price: product.price,
+        };
+      })
+    );
+
+    return res.status(200).json(productsWithDetails);
+  } catch (error) {
+    console.error('Error getting products from author:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
