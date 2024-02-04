@@ -90,7 +90,7 @@ export const deleteAuthor = async (req, res) => {
       return res.status(404).json({ message: 'Author not found' });
     }
 
-    await author.deleteOne();
+    await Author.deleteOne({ _id: req.params.id });
     return res.status(200).json({ message: 'Deleted', id: req.params.id });
   } catch (error) {
     console.error('Error deleting author:', error);

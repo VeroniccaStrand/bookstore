@@ -1,35 +1,44 @@
 import Book from '../models/bookModel.js';
 import Author from '../models/authorModel.js';
+import Product from '../models/productModel.js';
 
 // Add a book POST
 export const addBook = async (req, res) => {
   try {
     const { title, desc, author } = req.body;
 
-    if (!title || !desc || !author) {
-      return res.status(400).json({ error: 'Fill out all fields' });
+    // Check if the author exists
+    const existingAuthor = await Author.findById(author);
+
+    if (!existingAuthor) {
+      return res.status(404).json({ error: 'Author not found' });
     }
 
-    const book = await Book.create({ title, desc, author });
+    const book = await Book.create({
+      title,
+      desc,
+      author,
+    });
 
-    if (book) {
-      const author = await Author.findById(book.author);
-      author.books.push(book._id);
-      await author.save();
-
-      return res.status(201).json({
-        title: book.title,
-        desc: book.desc,
-        author: book.author,
-      });
-    } else {
-      return res.status(500).json({
-        error: 'Failed to create Book',
-        details: 'Internal server error',
-      });
+    if (!book) {
+      return res.status(500).json({ error: 'Failed to create Book' });
     }
+
+    // Push the book's ID to the author's books array
+    existingAuthor.books.push(book._id);
+    await existingAuthor.save();
+
+    return res.status(201).json({
+      book,
+    });
   } catch (error) {
     console.error('Error adding book:', error);
+
+    // Log specific errors for better troubleshooting
+    if (error.errors) {
+      console.error('Validation errors:', error.errors);
+    }
+
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
